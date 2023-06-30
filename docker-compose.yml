@@ -3,6 +3,7 @@ services:
     nginx:
         image: nginx:latest
         container_name: beedoo-nginx
+        restart: always
         ports:
             - '80:80'
         volumes:
@@ -23,6 +24,7 @@ services:
 
     db:
         container_name: beedoo-mysql
+        restart: always
         ports:
             - '3306:3306'
         image: mysql:5.7
@@ -35,3 +37,7 @@ services:
 volumes:
     db_data:
 
+networks:
+    default:
+        external:
+            name: beedoo-network
