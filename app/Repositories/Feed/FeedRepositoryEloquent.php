@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Config;
 /**
  *
  */
-class FeedRepository extends BaseRepository implements FeedRepositoryContract
+class FeedRepositoryEloquent extends BaseRepository implements FeedRepositoryContract
 {
     /**
      * @var Feed

@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
-use App\Repositories\Consumer\ConsumerRepository;
+use App\Repositories\Consumer\ConsumerRepositoryEloquent;
 use App\Repositories\Consumer\Contracts\ConsumerRepositoryContract;
-use App\Repositories\Feed\FeedRepository;
+use App\Repositories\Feed\FeedRepositoryEloquent;
 use App\Repositories\Feed\Contracts\FeedRepositoryContract;
 use App\Services\Feed\FeedService;
 use App\Services\Feed\Contracts\FeedServiceContract;
@@ -23,11 +23,11 @@ class AppServiceProvider extends ServiceProvider
         );
         $this->app->bind(
             FeedRepositoryContract::class,
-            FeedRepository::class
+            FeedRepositoryEloquent::class
         );
         $this->app->bind(
             ConsumerRepositoryContract::class,
-            ConsumerRepository::class
+            ConsumerRepositoryEloquent::class
         );
     }
 
@@ -38,8 +38,8 @@ class AppServiceProvider extends ServiceProvider
     {
         return [
             FeedService::class,
-            FeedRepository::class,
-            ConsumerRepository::class,
+            FeedRepositoryEloquent::class,
+            ConsumerRepositoryEloquent::class,
         ];
     }
 }

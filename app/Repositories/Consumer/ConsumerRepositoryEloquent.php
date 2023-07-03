@@ -6,7 +6,7 @@ use App\Models\Consumer;
 use App\Repositories\BaseRepository;
 use App\Repositories\Consumer\Contracts\ConsumerRepositoryContract;
 
-class ConsumerRepository extends BaseRepository implements ConsumerRepositoryContract
+class ConsumerRepositoryEloquent extends BaseRepository implements ConsumerRepositoryContract
 {
     /**
      * @var Consumer
