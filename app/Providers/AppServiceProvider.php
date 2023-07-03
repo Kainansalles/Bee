@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Repositories\Consumer\ConsumerRepository;
 use App\Repositories\Consumer\Contracts\ConsumerRepositoryContract;
-use App\Services\Consumer\ConsumerService;
-use App\Services\Consumer\Contracts\ConsumerServiceContract;
+use App\Repositories\Feed\FeedRepository;
+use App\Repositories\Feed\Contracts\FeedRepositoryContract;
+use App\Services\Feed\FeedService;
+use App\Services\Feed\Contracts\FeedServiceContract;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -16,8 +18,12 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(
-            ConsumerServiceContract::class,
-            ConsumerService::class
+            FeedServiceContract::class,
+            FeedService::class
+        );
+        $this->app->bind(
+            FeedRepositoryContract::class,
+            FeedRepository::class
         );
         $this->app->bind(
             ConsumerRepositoryContract::class,
@@ -31,8 +37,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         return [
-            ConsumerService::class,
-            ConsumerRepository::class
+            FeedService::class,
+            FeedRepository::class,
+            ConsumerRepository::class,
         ];
     }
 }

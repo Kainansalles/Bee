@@ -2,31 +2,22 @@
 
 namespace App\Repositories\Consumer;
 
-use App\Models\ConsumerFeedMessage;
+use App\Models\Consumer;
 use App\Repositories\BaseRepository;
 use App\Repositories\Consumer\Contracts\ConsumerRepositoryContract;
 
 class ConsumerRepository extends BaseRepository implements ConsumerRepositoryContract
 {
     /**
-     * @var ConsumerFeedMessage
+     * @var Consumer
      */
     protected $model;
 
     /**
-     * @param ConsumerFeedMessage $consumerFeedMessage
+     * @param Consumer $consumer
      */
-    public function __construct(ConsumerFeedMessage $consumerFeedMessage)
+    public function __construct(Consumer $consumer)
     {
-        $this->model = $consumerFeedMessage;
-    }
-
-    /**
-     * @param array $data
-     * @return mixed|void
-     */
-    public function createMessage(array $data)
-    {
-        $this->store($data);
+        $this->model = $consumer;
     }
 }

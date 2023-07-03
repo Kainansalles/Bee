@@ -3,50 +3,44 @@
 namespace App\Http\Controllers\Feed;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\FeedCreateMessage\FeedCreateMessageRequest;
+use App\Http\Resources\FeedResource;
 use App\Services\Feed\FeedService;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
-class FeedCreateMessagePostController extends Controller
+class FeedGetMessageController extends Controller
 {
     /**
      * @var FeedService
      */
-    private FeedService $consumerService;
+    private FeedService $feedService;
 
     /**
-     * @param FeedService $consumerService
+     * @param FeedService $feedService
      */
-    public function __construct(FeedService $consumerService)
+    public function __construct(FeedService $feedService)
     {
-        $this->consumerService = $consumerService;
+        $this->feedService = $feedService;
     }
 
     /**
-     * @param FeedCreateMessageRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @return AnonymousResourceCollection|JsonResponse
      */
-    public function __invoke(FeedCreateMessageRequest $request)
+    public function __invoke(Request $request)
     {
         try {
-            DB::beginTransaction();
 
-            $this->consumerService->createMessage($request->all());
+            $feeds = $this->feedService->feed($request->query());
 
-            DB::commit();
+            return FeedResource::collection($feeds);
 
-            return response()->json(
-                [
-                    'success' => 'Message Published',
-                ],
-                Response::HTTP_CREATED
-            );
         } catch (\Exception $e) {
-            DB::rollBack();
             Log::error('unexpected_error', [
-                'context' => 'feed-create-message',
+                'context' => 'feed-get-message',
                 'message' => $e->getMessage(),
                 'line' => $e->getLine(),
                 'file' => $e->getFile(),

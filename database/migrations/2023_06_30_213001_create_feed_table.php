@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('consumer_feed_messages', function (Blueprint $table) {
+        Schema::create('feeds', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('consumer_id')->unsigned();
             $table->foreign('consumer_id')->references('id')->on('consumers');
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('consumer_feed_messages');
+        Schema::dropIfExists('feeds');
     }
 };

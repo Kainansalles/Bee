@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Feed\FeedCreateMessagePostController;
+use App\Http\Controllers\Feed\FeedGetMessageController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::group(['prefix' => 'v1'], function() {
-    Route::post('/create-message', FeedCreateMessagePostController::class)->name('feed-create-message');
+    Route::group(['prefix' => 'feed'], function() {
+        Route::get('/', FeedGetMessageController::class)->name('feed-get-message');
+        Route::post('/create-message', FeedCreateMessagePostController::class)->name('feed-create-message');
+    });
 });
 
