@@ -3,6 +3,7 @@
 namespace App\Services\Feed;
 
 use App\Models\Consumer;
+use App\Models\Feed;
 use App\Repositories\Consumer\Contracts\ConsumerRepositoryContract;
 use App\Repositories\Feed\Contracts\FeedRepositoryContract;
 use App\Services\Feed\Contracts\FeedServiceContract;
@@ -34,15 +35,14 @@ class FeedService implements FeedServiceContract
 
     /**
      * @param array $data
-     * @return void
+     * @return Feed
      * @throws Exception
      */
-    public function createMessage(array $data)
+    public function createMessage(array $data): Feed
     {
         if ($data['anonymous']) {
             $data['consumer_id'] = Consumer::ANONYMOUS_ID;
-            $this->feedRepository->createMessage($data);
-            return;
+            return $this->feedRepository->createMessage($data);
         }
 
         $consumer = $this->consumerRepository->getById($data['consumer_id']);
@@ -50,7 +50,7 @@ class FeedService implements FeedServiceContract
             throw new Exception("Consumer not found");
         }
 
-        $this->feedRepository->createMessage($data);
+        return $this->feedRepository->createMessage($data);
     }
 
     /**

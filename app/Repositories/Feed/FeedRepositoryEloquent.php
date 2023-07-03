@@ -29,9 +29,9 @@ class FeedRepositoryEloquent extends BaseRepository implements FeedRepositoryCon
      * @param array $data
      * @return void
      */
-    public function createMessage(array $data)
+    public function createMessage(array $data): Feed
     {
-        $this->store($data);
+        return $this->store($data);
     }
 
     /**
