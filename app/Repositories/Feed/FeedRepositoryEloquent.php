@@ -7,9 +7,6 @@ use App\Repositories\BaseRepository;
 use App\Repositories\Feed\Contracts\FeedRepositoryContract;
 use Illuminate\Support\Facades\Config;
 
-/**
- *
- */
 class FeedRepositoryEloquent extends BaseRepository implements FeedRepositoryContract
 {
     /**

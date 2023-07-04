@@ -46,6 +46,7 @@ class FeedService implements FeedServiceContract
         }
 
         $consumer = $this->consumerRepository->getById($data['consumer_id']);
+
         if (empty($consumer)) {
             throw new Exception("Consumer not found");
         }
