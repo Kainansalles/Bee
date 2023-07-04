@@ -1,66 +1,169 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# ms-beedoo
+*ms-beedoo* é o serviço responsável por permitir que usuário publique mensagens e estas apareçam no feed por meio de uma listagem dos 10 últimos posts.
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+### 📈 Principais funcionalidades
 
-## About Laravel
+O projeto trata-se de uma avaliação da etapa 01 do processo seletivo para vaga de Dev Senior da Beedoo e possui alguns requisitos, sendo:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- [x] Criar uma rota POST, onde usuários (em anonimato) podem postar mensagens de texto de no máximo 300 caracteres;
+- [x] Criar uma rota GET, que por padrão liste as últimas 10 mensagens, possibilite paginação, e pesquisa por palavras chave;
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## DOCUMENTAÇÃO
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 💻 Informações relevantes
 
-## Learning Laravel
+Este projeto utilizará as seguintes tecnologias:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- PHP (Laravel)
+- Banco de dados (MySQL)
+- Docker
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Iniciando serviço local
+- Após clonar o projeto, entre na pasta na raiz do mesmo
 
-## Laravel Sponsors
+# Para subir o serviço
+Execute o comando abaixo para criar o .env
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+```
+cp .env.example .env
+```
 
-### Premium Partners
+Exeute o comando abaixo para criar a rede do docker do projeto
+```
+docker network create beedoo-network
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+Altere o arquivo /etc/vhosts e adicione:
+```
+127.0.0.1       beedoo-mysql
+```
 
-## Contributing
+Buildando o projeto:
+```
+docker-compose up -d --build
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Execute as migrations e seed do projet:
+```
+php artisan migrate:fresh --seed
+```
 
-## Code of Conduct
+Para rodar os testes, execute o comando abaixo:
+```
+php artisan test
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### ✅ Exemplo de payload para criar mensagem
+POST - api/v1/feed/create-message
 
-## Security Vulnerabilities
+```
+{
+    "consumer_id": "1",
+    "message": "xpto",
+    "anonymous": false
+}
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### ✅ Exemplo de payload para buscar o feed
+GET - api/v1/feed
 
-## License
+Pode ser enviado os seguintes campos como parâmetro na URL
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+|  Campo  |  Funcionalidade  |
+|:-------:|:----------------:|
+| keyword | Filtrar mensagem |
+|  page   |    Paginação     |
+
+
+## Servidores e Portas
+|   Serviço    | porta |
+|:------------:|:----:|
+|  beedoo.api  |  80  |
+| beedoo.mysql | 3306 |
+
+## Arquitetura
+- *Criacao de interfaces:* A criação de interfaces facilitou os testes bem como manteve um contrato, o que permite - caso seja necessário - que mais de uma pessoa mexa no mesmo fluxo, otimizando assim o trabalho.
+- Separacao de responsabilidades: Desde o inicio do desenvolvimento da API é importante criar classes com responsabilidades separadas para facilitar a manutencao, escalabilidade e testabilidade. Assim, se desenvolvessemos a parte dos comentários, estes teriam controller, services e demais classes apartadas.
+
+#  Melhorias
+
+No futuro queremos permitir que os usuários possam adicionar comentários as mensagens. Por isso será necessário:
+
+## Melhorias técnicas 💻
+
+### Banco de dados:
+
+Será necessário a criacao de uma *nova tabela no banco de dados* relacionada a tabela  `feed` para permitir o armazenamento dos comentários. Podemos nomear o mesmo como **feed_comments**.
+Será interessante criar uma coluna com a *data da publicacao, bem como o **texto do comentário*.
+
+### API:
+
+Precisaremos criar novas rotas em nossa API. Uma rota de POST permitirá que os usuários enviem o novo comentário com uma determinada mensagem.
+Além disso, precisaremos criar uma rota GET para consulta do comentário. Gostaria de sugerir ainda a implementacao de uma
+rota GET para consultar a lista de comentários com base em palavras-chave, já que no caso desta API possivel listar por
+usuários, uma vez que estes sao anonimos.
+
+Também podemos verificar com o time de produtos se o usuário poderá editar ou excluir as mensagens e comentários, o que
+fará com que criemos rotas de edicao do comentário (PATH - parcial / PUT - total) ou a exclusao do comentário (DELETE).
+
+### Cache
+
+Assim reduziremos a carga no banco de dados com o aumento de consultas de mensagens e comentários. A implementacao de cache de dados permitirá o melhor
+desempenho da API.
+
+### Expurgo
+
+Criar expurgos automáticos para deixar a base quente menor
+
+### Quais melhorias poderiam ser empregadas ao projeto se tivesse mais tempo:
+- Testes de integração.
+- Separar camada de provider para Repository e Service.
+
+## Principais desafios 📈
+
+### 1️⃣ Escalabilidade
+
+Em decorrencia do número de comentários e mensagens precisamos nos preparar para possíveis desafios de desempenho e escalabilidade.
+
+### 2️⃣ Controle de acesso
+
+Como as postagens serão de forma anonima é necessário validar com o time de produtos se faz-se necessário implementar o uso
+de tokens para garantir que apenas usuários autorizados possam postar comentários e mensagens.
+
+### 3️⃣ Relacionamento entre tabelas
+
+De mensagens e comentários.
+
+### 4️⃣ Monitoramento de desempenho
+
+Será necessário implementar ferramentas de monitoramento de desempenho da API em producao. Através de ferramentas como New Relic, Datadog e etc poderemos criar métricas relevantes
+como tempo de resposta, tempo médio de processamento, taxas de erros, dentre outros pontos que analisaremos em conjunto com o time e necessidades da empresa.
+
+## Principais questionamentos ao time de produtos 👨‍💻🚀
+
+O alinhamento com o time de produtos é essencial. Em minha experiencia como desenvolvedor sempre trabalhei lado a lado com o time de produtos, por isso questionaria:
+
+- Os comentários também serão anônimos?
+- Qualquer pessoal pode publicar mensagens e comentários ou devemos exigir autenticação?
+- Os usuários devem poder editar ou excluir seus comentários e mensagens posteriormente?
+- Existe algum limite de tempo ou restrição para essas ações?
+- Um comentário será associado a apenas uma mensagem ou a várias?
+- Desejamos implementar um comentário associado a outro comentário? Como se fosse uma thread ou resposta ao comentário inicial?
+- Os comentários devem ser classificados por data de criação (o mais recente ou mais antigo) ou de outra forma (implementar uma avaliacao do comentário por usuários e classificá-lo por classificacao de relevancia, por exemplo)?
+- A lista de mensagens será dos 10 últimos Posts. O mesmo ocorrerá com os comentários? Qual será o número de comentários exibidos?
+- Os usuários devem receber notificações quando novos comentários forem adicionados?
+
+## Principais questionamentos ao time de Devops 🤖
+
+_Acredito que o alinhamento com o time de Devops também é essencial, uma vez que cada empresa trabalha de uma forma bem como tem suas métricas
+e hitóricos para lidar com possíveis problemas. Prevenir que nossa API sofra com uma alta demanda é tao importante quanto novas implementacoes
+de funcionalidades._ Por isso eu perguntaria ao time de Devops:
+
+- Como podemos configurar a infraestrutura e o ambiente de implantação para lidar com o aumento de tráfego e de dados à medida que mais usuários começarem a usar o sistema de mensagens e comentários?
+- Quais estratégias de escalabilidade e balanceamento de carga devemos considerar?
+
+## Principais questionamentos ao Tech lead 💻
+
+- Qual tempo devemos manter para o cache?
+- Quanto tempo devemos manter na base quente?
